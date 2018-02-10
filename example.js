@@ -1,13 +1,13 @@
 
 import {render, c} from './index';
 
+
 const Main = () => {
   return (
     c('div', {
       c: c('div', {
         c: [
-          c(StatefulComponent, {title: 'My stateful counter is: '}), 
-          c(StatefulComponent, {title: 'Hey Im another component with my own state: '}),
+          c(StatefulComponent, {title: 'Hello there!'})
         ]
       })
     })
@@ -18,14 +18,30 @@ const StatefulComponent = {
   state: {
     counter: 0
   },
+  init: function(){
+    this.onClick = this.onClick.bind(this);
+    this.setState({
+      counter: 4
+    })
+  },
+  reRender: function(){
+    console.log('re render!')
+  },
+  onClick: function() {
+    this.setState({
+      counter: this.state.counter + 1
+    });
+  },
   render: function(props) {
     return c('div', {
-      onclick: () => {
-        this.setState({
-          counter: this.state.counter + 1
-        });
-      },
-      c: props.title + this.state.counter
+      c: c('div', {
+        c: [
+          c('div', {
+            onclick: this.onClick,
+            c: c('div', 'the counter is at ' + this.state.counter)
+          })
+        ]
+      })
     })
   }
 }

@@ -11,14 +11,29 @@ function c(elm, props = {}) {
   if(typeof elm === 'object'){
     elm = Object.create(elm);
     elm.state = Object.assign({}, elm.state);
-    let thing = document.createElement('div');
-    elm.self = thing; // Save the node to the object
+
+    let node = document.createElement('div');
+    elm.self = node; // Save the node to the object
     elm.setState = function(newState){
       this.state = newState;
+      // This is not sufficient, as it will not preserve children state on re-render
       render(this.render(props), this.self)
     }
+
     props.c = elm.render(props);
-    elm = thing;
+
+    if(elm.hasInit === undefined){
+      let temp = elm
+      // This will cause a bug and mount the component again because
+      // of the way we re-render. To fix.
+      setTimeout(() =>{
+        temp.init();
+        temp.hasInit = true;
+      }, 0)
+    }
+
+    elm = node;
+    
   } else {
     elm = document.createElement(elm);
     if (typeof props == "string") {

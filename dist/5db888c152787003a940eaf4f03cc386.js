@@ -87,14 +87,28 @@ function c(elm, props = {}) {
   if (typeof elm === 'object') {
     elm = Object.create(elm);
     elm.state = Object.assign({}, elm.state);
-    let thing = document.createElement('div');
-    elm.self = thing; // Save the node to the object
+
+    let node = document.createElement('div');
+    elm.self = node; // Save the node to the object
     elm.setState = function (newState) {
       this.state = newState;
+      // This is not sufficient, as it will not preserve children state on re-render
       render(this.render(props), this.self);
     };
+
     props.c = elm.render(props);
-    elm = thing;
+
+    if (elm.hasInit === undefined) {
+      let temp = elm;
+      // This will cause a bug and mount the component again because
+      // of the way we re-render. To fix.
+      setTimeout(() => {
+        temp.init();
+        temp.hasInit = true;
+      }, 0);
+    }
+
+    elm = node;
   } else {
     elm = document.createElement(elm);
     if (typeof props == "string") {
@@ -134,7 +148,7 @@ var _index = require("./index");
 const Main = () => {
   return (0, _index.c)('div', {
     c: (0, _index.c)('div', {
-      c: [(0, _index.c)(StatefulComponent, { title: 'My stateful counter is: ' }), (0, _index.c)(StatefulComponent, { title: 'Hey Im another component with my own state: ' })]
+      c: [(0, _index.c)(StatefulComponent, { title: 'Hello there!' })]
     })
   });
 };
@@ -143,14 +157,28 @@ const StatefulComponent = {
   state: {
     counter: 0
   },
+  init: function () {
+    this.onClick = this.onClick.bind(this);
+    this.setState({
+      counter: 4
+    });
+  },
+  reRender: function () {
+    console.log('re render!');
+  },
+  onClick: function () {
+    this.setState({
+      counter: this.state.counter + 1
+    });
+  },
   render: function (props) {
     return (0, _index.c)('div', {
-      onclick: () => {
-        this.setState({
-          counter: this.state.counter + 1
-        });
-      },
-      c: props.title + this.state.counter
+      c: (0, _index.c)('div', {
+        c: [(0, _index.c)('div', {
+          onclick: this.onClick,
+          c: (0, _index.c)('div', 'the counter is at ' + this.state.counter)
+        })]
+      })
     });
   }
 };
@@ -174,7 +202,7 @@ function Module() {
 module.bundle.Module = Module;
 
 if (!module.bundle.parent && typeof WebSocket !== 'undefined') {
-  var ws = new WebSocket('ws://localhost:59747/');
+  var ws = new WebSocket('ws://localhost:49794/');
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
 
