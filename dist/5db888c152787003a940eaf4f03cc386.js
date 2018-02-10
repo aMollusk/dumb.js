@@ -87,13 +87,13 @@ function c(elm, props = {}) {
   if (typeof elm === 'object') {
     elm = Object.create(elm);
     elm.state = Object.assign({}, elm.state);
-
+    console.log(elm);
     let node = document.createElement('div');
-    elm.self = node; // Save the node to the object
+    elm.node = node; // Save the node to the object
     elm.setState = function (newState) {
       this.state = newState;
       // This is not sufficient, as it will not preserve children state on re-render
-      render(this.render(props), this.self);
+      render(this.render(props), this.node);
     };
 
     props.c = elm.render(props);
@@ -157,16 +157,12 @@ const StatefulComponent = {
   state: {
     counter: 0
   },
-  init: function () {
-    this.onClick = this.onClick.bind(this);
-    this.setState({
-      counter: 4
-    });
-  },
+  init: function () {},
   reRender: function () {
     console.log('re render!');
   },
   onClick: function () {
+    console.log(this);
     this.setState({
       counter: this.state.counter + 1
     });
@@ -175,7 +171,9 @@ const StatefulComponent = {
     return (0, _index.c)('div', {
       c: (0, _index.c)('div', {
         c: [(0, _index.c)('div', {
-          onclick: this.onClick,
+          onclick: () => {
+            this.onClick();
+          },
           c: (0, _index.c)('div', 'the counter is at ' + this.state.counter)
         })]
       })
@@ -202,7 +200,7 @@ function Module() {
 module.bundle.Module = Module;
 
 if (!module.bundle.parent && typeof WebSocket !== 'undefined') {
-  var ws = new WebSocket('ws://localhost:49794/');
+  var ws = new WebSocket('ws://localhost:56756/');
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
 

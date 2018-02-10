@@ -11,13 +11,13 @@ function c(elm, props = {}) {
   if(typeof elm === 'object'){
     elm = Object.create(elm);
     elm.state = Object.assign({}, elm.state);
-
+    console.log(elm)
     let node = document.createElement('div');
-    elm.self = node; // Save the node to the object
+    elm.node = node; // Save the node to the object
     elm.setState = function(newState){
       this.state = newState;
       // This is not sufficient, as it will not preserve children state on re-render
-      render(this.render(props), this.self)
+      render(this.render(props), this.node)
     }
 
     props.c = elm.render(props);
