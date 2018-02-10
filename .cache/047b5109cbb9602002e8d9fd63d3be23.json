@@ -1,0 +1,1 @@
+{"dependencies":[{"name":"./example.js","dynamic":true}],"generated":{"html":"<html>\n<body>\n\n  <h1>Hello</h1>\n  <div id=\"app\"></div>\n  <script src=\"/dist/5db888c152787003a940eaf4f03cc386.js\"></script>\n</body>\n</html>"},"hash":"33898eab23cdcc6e3e445df630c81fd2"}
