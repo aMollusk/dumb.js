@@ -68,7 +68,7 @@ require = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({2:[function(require,module,exports) {
+})({3:[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -91,9 +91,9 @@ function c(elm, props = {}) {
     elm.self = thing; // Save the node to the object
     elm.setState = function (newState) {
       this.state = newState;
-      render(this.render(), this.self);
+      render(this.render(props), this.self);
     };
-    props.c = elm.render();
+    props.c = elm.render(props);
     elm = thing;
   } else {
     elm = document.createElement(elm);
@@ -126,7 +126,7 @@ function c(elm, props = {}) {
 
 exports.render = render;
 exports.c = c;
-},{}],3:[function(require,module,exports) {
+},{}],2:[function(require,module,exports) {
 "use strict";
 
 var _index = require("./index");
@@ -134,29 +134,29 @@ var _index = require("./index");
 const Main = () => {
   return (0, _index.c)('div', {
     c: (0, _index.c)('div', {
-      c: [(0, _index.c)(StatefullComponent), (0, _index.c)(StatefullComponent)]
+      c: [(0, _index.c)(StatefulComponent, { title: 'My stateful counter is: ' }), (0, _index.c)(StatefulComponent, { title: 'Hey Im another component with my own state: ' })]
     })
   });
 };
 
-const StatefullComponent = {
+const StatefulComponent = {
   state: {
     counter: 0
   },
-  render: function () {
+  render: function (props) {
     return (0, _index.c)('div', {
       onclick: () => {
         this.setState({
           counter: this.state.counter + 1
         });
       },
-      c: 'Yo, you should click me. Counter is: ' + this.state.counter
+      c: props.title + this.state.counter
     });
   }
 };
 
 (0, _index.render)(Main(), document.getElementById('app'));
-},{"./index":2}],0:[function(require,module,exports) {
+},{"./index":3}],0:[function(require,module,exports) {
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
 function Module() {
@@ -174,7 +174,7 @@ function Module() {
 module.bundle.Module = Module;
 
 if (!module.bundle.parent && typeof WebSocket !== 'undefined') {
-  var ws = new WebSocket('ws://localhost:60250/');
+  var ws = new WebSocket('ws://localhost:59747/');
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
 
@@ -275,4 +275,4 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id)
   });
 }
-},{}]},{},[0,3])
+},{}]},{},[0,2])

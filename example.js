@@ -2,26 +2,30 @@
 import {render, c} from './index';
 
 const Main = () => {
-  return c('div', {
-    c: c('div', {
-      c: [c(StatefullComponent), c(StatefullComponent)]
+  return (
+    c('div', {
+      c: c('div', {
+        c: [
+          c(StatefulComponent, {title: 'My stateful counter is: '}), 
+          c(StatefulComponent, {title: 'Hey Im another component with my own state: '}),
+        ]
+      })
     })
-  })
+  )
 }
 
-
-const StatefullComponent = {
+const StatefulComponent = {
   state: {
     counter: 0
   },
-  render: function() {
+  render: function(props) {
     return c('div', {
       onclick: () => {
         this.setState({
           counter: this.state.counter + 1
         });
       },
-      c: 'Yo, you should click me. Counter is: ' + this.state.counter
+      c: props.title + this.state.counter
     })
   }
 }

@@ -15,11 +15,10 @@ function c(elm, props = {}) {
     elm.self = thing; // Save the node to the object
     elm.setState = function(newState){
       this.state = newState;
-      render(this.render(), this.self)
+      render(this.render(props), this.self)
     }
-    props.c = elm.render();
+    props.c = elm.render(props);
     elm = thing;
-
   } else {
     elm = document.createElement(elm);
     if (typeof props == "string") {
